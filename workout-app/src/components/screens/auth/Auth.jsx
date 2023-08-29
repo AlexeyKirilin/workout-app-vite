@@ -1,31 +1,19 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-
 import Button from '../../ui/button/Button';
 import Field from '../../ui/field/Field';
+import Loader from '../../ui/loader/Loader';
 
 import Layout from '../../layout/Layout';
 
 import styles from './Auth.module.scss';
+import { useAuthPage } from './useAuthPage';
 
 const Auth = () => {
-  const [type, setType] = useState('auth');
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    mode: 'onChange',
-  });
-
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+  const { errors, handleSubmit, isLoading, register, setType, onSubmit } = useAuthPage();
   return (
     <>
       <Layout heading="sign in" bgImage="/images/auth-bg.png" />
       <div className="wrapper-inner-page">
+        {isLoading && <Loader />}
         <form onSubmit={handleSubmit(onSubmit)}>
           <Field
             error={errors?.email?.message}
@@ -34,25 +22,21 @@ const Auth = () => {
             placeholder="email"
             register={register}
             options={{
-              ...register('email', {
-                required: 'email is required',
-              }),
+              required: 'email is required',
             }}
           />
           <Field
             error={errors?.password?.message}
-            type="text"
+            type="password"
             name="password"
             placeholder="password"
             register={register}
             options={{
-              ...register('password', {
-                required: 'password is required',
-              }),
+              required: 'password is required',
             }}
           />
           <div className={styles.wrapperButtons}>
-            <Button clickHandler={() => setType('auth')}>Sign in</Button>
+            <Button clickHandler={() => setType('login')}>Sign in</Button>
             <Button clickHandler={() => setType('register')}>Sign up</Button>
           </div>
         </form>

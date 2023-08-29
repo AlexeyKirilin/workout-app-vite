@@ -9,16 +9,18 @@ import Hamburger from '../hamburger/Hamburger';
 
 import styles from './Header.module.scss';
 
-const Header = ({ backLink = '/' }) => {
+const Header = ({ backLink = '' }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+
   const { isAuth } = useAuth();
+
   return (
     <header className={styles.header}>
-      {pathname !== '/' ? (
+      {pathname !== '/' || pathname !== '/auth' || !isAuth ? (
         <button
           onClick={() => {
-            navigate(backLink);
+            navigate(isAuth ? backLink : '/auth');
           }}
         >
           <IoMdArrowBack fill="#fff" fontSize={29} />
@@ -26,15 +28,13 @@ const Header = ({ backLink = '/' }) => {
       ) : (
         <button
           onClick={() => {
-            navigate(isAuth ? '/profile' : '/auth');
+            navigate('/profile');
           }}
         >
-          <SlUser fill="#fff" fontSize={27} />
+          <SlUser fill="#fff" fontSize={25} />
         </button>
       )}
-
-      {/* {User profile} */}
-      <Hamburger />
+      {isAuth && <Hamburger />}
     </header>
   );
 };
